@@ -2,8 +2,8 @@ from typing import Type
 
 from matplotlib import pyplot as plt
 
-from Models.Point import Point, Client, Magazine
-from Models.Vehicle import Vehicle, ColorCapacityMapper
+from Models.point import Point, Client, Magazine
+from Models.vehicle import Vehicle, ColorCapacityMapper
 
 plt.style.use('fivethirtyeight')
 

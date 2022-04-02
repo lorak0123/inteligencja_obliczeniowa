@@ -1,6 +1,6 @@
 import math
 
-from Models.Demand import Demand
+from Models.demand import Demand
 from Models.utils import ToStrMixin
 
 

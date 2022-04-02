@@ -1,6 +1,6 @@
-from Models.Point import Point
-from Models.Demand import Demand
-from Models.Vehicle import Vehicle
+from Models.point import Point
+from Models.demand import Demand
+from Models.vehicle import Vehicle
 import numpy as np
 import math
 
