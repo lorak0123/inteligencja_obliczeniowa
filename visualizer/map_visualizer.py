@@ -3,13 +3,13 @@ from typing import Type
 from matplotlib import pyplot as plt
 
 from Models.Point import Point, Client, Magazine
-from Models.Vehicle import Vehicle
+from Models.Vehicle import Vehicle, ColorCapacityMapper
 
 plt.style.use('fivethirtyeight')
 
-COLOR_MAP = {'R': '#FF0000',
-             'G': '#32CD32',
-             'B': '#1E90FF'}
+COLOR_MAP = {ColorCapacityMapper.READ: '#FF0000',
+             ColorCapacityMapper.GREEN: '#32CD32',
+             ColorCapacityMapper.BLUE: '#1E90FF'}
 
 
 def draw_point_map(points: list[Type[Point]]):
@@ -19,20 +19,21 @@ def draw_point_map(points: list[Type[Point]]):
 
     plt.scatter(x=[point.x_coordinate for point in magazines],
                 y=[point.y_coordinate for point in magazines],
-                color='#FF7F50',
-                s=100,
+                c='#FF7F50',
+                marker='x',
+                s=70,
                 label="Magazyny")
 
     plt.scatter(x=[point.x_coordinate for point in vehicles],
                 y=[point.y_coordinate for point in vehicles],
                 marker='^',
-                c=[COLOR_MAP[point.color] for point in vehicles],
+                color=[COLOR_MAP[point.color] for point in vehicles],
                 s=100,
                 label="Pojazdy")
 
     plt.scatter(x=[point.x_coordinate for point in clients],
                 y=[point.y_coordinate for point in clients],
-                c=[0, 0, 0],
+                c='#000000',
                 label="Klienci")
 
     for i, vehicle in enumerate(vehicles):

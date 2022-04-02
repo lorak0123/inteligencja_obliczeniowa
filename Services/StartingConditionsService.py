@@ -1,8 +1,9 @@
+import random
 from typing import Type
 
 from Models.Point import Point, Magazine, Client
 from Models.Demand import Demand
-from Models.Vehicle import Vehicle
+from Models.Vehicle import Vehicle, ColorCapacityMapper
 import numpy as np
 
 from visualizer.map_visualizer import draw_point_map
@@ -10,12 +11,12 @@ from visualizer.map_visualizer import draw_point_map
 MAX_DEMAND = 200
 NUMBER_OF_MAGAZINES = 5
 VEHICLE_CAPACITY = [1000, 1500, 2000]
-NUMBER_OF_POINTS = 10
+NUMBER_OF_POINTS = 100
 
 
-def GeneratePoints(pointNumber: int):
+def generate_points(point_number: int):
     points: Point = []
-    for i in range(pointNumber-NUMBER_OF_MAGAZINES):
+    for i in range(point_number-NUMBER_OF_MAGAZINES):
         points.append(generate_point(False))
     for i in range(NUMBER_OF_MAGAZINES):
         points.append(generate_point(True))
@@ -44,8 +45,8 @@ def generate_vehicles(magazines: list[Magazine]):
         vehicles.append(
             Vehicle(
                 demand,
-                magazines[np.random.randint(0, len(magazines))],
-                VEHICLE_CAPACITY[np.random.randint(0, 3)],
+                random.choice(magazines),
+                random.choice([color for color in ColorCapacityMapper]),
                 False
             )
         )
@@ -54,35 +55,23 @@ def generate_vehicles(magazines: list[Magazine]):
     return vehicles
 
 
-def generate_starting_conditions():
-    clients = [generate_point(False) for _ in range(NUMBER_OF_POINTS-NUMBER_OF_MAGAZINES)]
-    magazines = [generate_point(True) for _ in range(NUMBER_OF_MAGAZINES)]
+def generate_starting_conditions(number_of_points: int, number_of_magazines: int):
+    clients = [generate_point(False) for _ in range(number_of_points-number_of_magazines)]
+    magazines = [generate_point(True) for _ in range(number_of_magazines)]
     # points = GeneratePoints(NUMBER_OF_POINTS)
     # magazines = list(filter(lambda x: x.isMagazine == True, points))
     vehicles = generate_vehicles(magazines)
-    [vehicles[0].move(Point(point.x_coordinate, point.y_coordinate)) for point in clients]
+    try:
+        while True:
+            vehicles[0].go_to_next_client(clients)
+    except Exception:
+        pass
+
     return [*clients, *magazines, *vehicles]
-
-# print(GenerateDemand())
-# demands =[]
-# for i in range(10000):
-#     demands.append(GenerateDemand())
-# lens = [0,0,0]
-# for i in demands:
-#     for j in range(3):
-#         if(i[j]>0):
-#             lens[j]+=1
-#
-# print(lens[0],lens[1],lens[2])
-
-# p = GeneratePoints(30)
-# for i in p:
-#     print(i)
 
 
 if __name__ == '__main__':
-    points: list[Type[Point]] = generate_starting_conditions()
-
+    points: list[Type[Point]] = generate_starting_conditions(NUMBER_OF_POINTS, NUMBER_OF_MAGAZINES)
 
     [print(item) for item in points]
     draw_point_map(points)
