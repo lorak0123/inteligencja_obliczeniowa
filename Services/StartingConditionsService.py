@@ -1,75 +1,66 @@
-from Models.Point import Point
+from typing import Type
+
+from Models.Point import Point, Magazine, Client
 from Models.Demand import Demand
 from Models.Vehicle import Vehicle
 import numpy as np
 
+from visualizer.map_visualizer import draw_point_map
 
 MAX_DEMAND = 200
 NUMBER_OF_MAGAZINES = 5
 VEHICLE_CAPACITY = [1000, 1500, 2000]
 NUMBER_OF_POINTS = 10
 
+
 def GeneratePoints(pointNumber: int):
     points: Point = []
     for i in range(pointNumber-NUMBER_OF_MAGAZINES):
-        points.append(GeneratePoint(False))
+        points.append(generate_point(False))
     for i in range(NUMBER_OF_MAGAZINES):
-        points.append(GeneratePoint(True))
+        points.append(generate_point(True))
     return points
 
-def GeneratePoint(isMagazine:bool):
-    demands = GenerateDemand()
-    return Point(
-        np.random.random() * 100,
-        np.random.random() * 100,
-        Demand(
-            demands[0],
-            demands[1],
-            demands[2],
-        ),
-        isMagazine
-    )
 
-def GenerateDemand():
-    demands = []
-    while np.sum(demands) <100:
-        for i in range(3):
-            demand = np.random.randint(0, MAX_DEMAND)
-            if(np.random.randint(0, 100) > 74): #pozwala dostroić liczbę przypadków z jednym, dwoma, lub trzeba produktami
-                demand = int(demand/3)
-            if(np.sum(demands) + demand > 200 or len(demands) == 3):
-                break
-            demands.append(demand)
-        if (np.sum(demands) + demand > MAX_DEMAND or len(demands) == 3):
-            break
-    demands = [i * (-1) if np.random.choice([True, False]) else i for i in demands]
-    while len(demands)<3:
-        demands.append(0)
-    np.random.shuffle(demands)
-    return demands
+def generate_point(is_magazine: bool):
+    if is_magazine:
+        return Magazine(
+            np.random.random() * 100,
+            np.random.random() * 100,
+        )
+    else:
+        return Client(
+            np.random.random() * 100,
+            np.random.random() * 100,
+            Demand.random_demand(MAX_DEMAND)
+        )
 
-def GenerateVehicles(magazines : list[Point]):
-    numberOfVehicles = np.random.randint(3,7)
+
+def generate_vehicles(magazines: list[Magazine]):
+    number_of_vehicles = np.random.randint(3, 7)
     vehicles = []
-    for i in range(numberOfVehicles):
+    for i in range(number_of_vehicles):
         demand = Demand(0, 0, 0)
         vehicles.append(
             Vehicle(
                 demand,
-                magazines[np.random.randint(0,len(magazines))],
-                VEHICLE_CAPACITY[np.random.randint(0,3)],
+                magazines[np.random.randint(0, len(magazines))],
+                VEHICLE_CAPACITY[np.random.randint(0, 3)],
                 False
             )
         )
-    catVehicle = np.random.randint(0,numberOfVehicles)
-    vehicles[catVehicle].isCatDriver = True
+    cat_vehicle = np.random.randint(0, number_of_vehicles)
+    vehicles[cat_vehicle].is_cat_driver = True
     return vehicles
 
-def GenerateStartingConditions():
-    points = GeneratePoints(NUMBER_OF_POINTS)
-    magazines = list(filter(lambda x: x.isMagazine == True, points))
-    vehicles = GenerateVehicles(magazines)
-    return points, vehicles
+
+def generate_starting_conditions():
+    clients = [generate_point(False) for _ in range(NUMBER_OF_POINTS-NUMBER_OF_MAGAZINES)]
+    magazines = [generate_point(True) for _ in range(NUMBER_OF_MAGAZINES)]
+    # points = GeneratePoints(NUMBER_OF_POINTS)
+    # magazines = list(filter(lambda x: x.isMagazine == True, points))
+    vehicles = generate_vehicles(magazines)
+    return [*clients, *magazines, *vehicles]
 
 # print(GenerateDemand())
 # demands =[]
@@ -87,6 +78,9 @@ def GenerateStartingConditions():
 # for i in p:
 #     print(i)
 
-p,v = GenerateStartingConditions()
-for i in v:
-    print(i)
+
+if __name__ == '__main__':
+    points: list[Type[Point]] = generate_starting_conditions()
+
+    draw_point_map(points)
+    [print(item) for item in points]
