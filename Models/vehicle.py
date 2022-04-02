@@ -1,8 +1,6 @@
 from enum import Enum
-
-from Models.point import Point, Client
+from Models.point import Point
 from Models.demand import Demand
-from Models.exceptions import NoMoreClientsException
 from Models.utils import ToStrMixin
 
 

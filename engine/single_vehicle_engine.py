@@ -1,8 +1,9 @@
+import os
 from typing import Type
 
 from Models.demand import Demand
 from Models.exceptions import NoMoreClientsException
-from Models.point import Point, Client
+from Models.point import Point
 from Models.vehicle import Vehicle
 from engine.engine_interface import EngineInterface
 
@@ -20,9 +21,10 @@ class SingleVehicleEngine(EngineInterface):
                 nearest_distance = distance
 
         vehicle.move(nearest_point)
-        vehicle.demand = Demand(uranium=vehicle.capacity/6,
-                                tuna=vehicle.capacity/6,
-                                orange=vehicle.capacity/6)
+        max_demand = max([vehicle.capacity/6, int(os.environ['MAX_DEMAND'])])
+        vehicle.demand = Demand(uranium=max_demand,
+                                tuna=max_demand,
+                                orange=max_demand)
 
     def go_to_next_client(self, vehicle: Vehicle):
         not_done = list(filter(lambda client: client.not_done, self.clients))

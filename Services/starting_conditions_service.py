@@ -22,7 +22,7 @@ def generate_vehicles(magazines: list[Magazine]):
                 False
             )
         )
-    cat_vehicle = random.randint(0, number_of_vehicles)
+    cat_vehicle = random.randint(0, number_of_vehicles - 1)
     vehicles[cat_vehicle].is_cat_driver = True
     return vehicles
 

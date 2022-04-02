@@ -17,6 +17,14 @@ def draw_point_map(points: list[Type[Point]]):
     magazines: Magazine = list(filter(lambda point: isinstance(point, Magazine), points))
     vehicles: Vehicle = list(filter(lambda point: isinstance(point, Vehicle), points))
 
+    for i, vehicle in enumerate(vehicles):
+        plt.plot([point.x_coordinate for point in vehicle.directions],
+                 [point.y_coordinate for point in vehicle.directions],
+                 # c=COLOR_MAP[vehicle.color],
+                 label=f'Trasa pojazd {i}',
+                 linewidth=2,
+                 alpha=0.5)
+
     plt.scatter(x=[point.x_coordinate for point in magazines],
                 y=[point.y_coordinate for point in magazines],
                 c='#FF7F50',
@@ -36,12 +44,6 @@ def draw_point_map(points: list[Type[Point]]):
                 c='#000000',
                 label="Klienci")
 
-    for i, vehicle in enumerate(vehicles):
-        plt.plot([point.x_coordinate for point in vehicle.directions],
-                 [point.y_coordinate for point in vehicle.directions],
-                 c='#999999',
-                 label=f'Trasa pojazd {i}',
-                 linewidth=1.5)
     plt.legend()
 
     plt.show()
