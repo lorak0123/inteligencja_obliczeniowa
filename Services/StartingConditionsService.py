@@ -60,6 +60,7 @@ def generate_starting_conditions():
     # points = GeneratePoints(NUMBER_OF_POINTS)
     # magazines = list(filter(lambda x: x.isMagazine == True, points))
     vehicles = generate_vehicles(magazines)
+    [vehicles[0].move(Point(point.x_coordinate, point.y_coordinate)) for point in clients]
     return [*clients, *magazines, *vehicles]
 
 # print(GenerateDemand())
@@ -82,5 +83,6 @@ def generate_starting_conditions():
 if __name__ == '__main__':
     points: list[Type[Point]] = generate_starting_conditions()
 
-    draw_point_map(points)
+
     [print(item) for item in points]
+    draw_point_map(points)

@@ -13,4 +13,10 @@ class Vehicle(Point, ToStrMixin):
         self.capacity = capacity
         self.is_cat_driver = is_cat_driver
         self.color = COLORS[VEHICLE_CAPACITY.index(self.capacity)]
+        self.directions = [Point(self.x_coordinate, self.y_coordinate)]
+
+    def move(self, point: Point):
+        self.x_coordinate = point.x_coordinate
+        self.y_coordinate = point.y_coordinate
+        self.directions.append(Point(self.x_coordinate, self.y_coordinate))
 

@@ -34,6 +34,13 @@ def draw_point_map(points: list[Type[Point]]):
                 y=[point.y_coordinate for point in clients],
                 c=[0, 0, 0],
                 label="Klienci")
+
+    for i, vehicle in enumerate(vehicles):
+        plt.plot([point.x_coordinate for point in vehicle.directions],
+                 [point.y_coordinate for point in vehicle.directions],
+                 c='#999999',
+                 label=f'Trasa pojazd {i}',
+                 linewidth=1.5)
     plt.legend()
 
     plt.show()
