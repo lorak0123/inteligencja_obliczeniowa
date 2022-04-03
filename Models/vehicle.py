@@ -1,4 +1,6 @@
 from enum import Enum
+from typing import Type
+
 from Models.point import Point
 from Models.demand import Demand
 from Models.utils import ToStrMixin
@@ -24,9 +26,9 @@ class Vehicle(Point, ToStrMixin):
         self.directions = [Point(self.x_coordinate, self.y_coordinate)]
         self.total_distance = 0
 
-    def move(self, point: Point):
+    def move(self, point: Type[Point]):
         self.total_distance += Point(self.x_coordinate, self.y_coordinate).calculate_distance(point)
         self.x_coordinate = point.x_coordinate
         self.y_coordinate = point.y_coordinate
-        self.directions.append(Point(self.x_coordinate, self.y_coordinate))
+        self.directions.append(point)
 

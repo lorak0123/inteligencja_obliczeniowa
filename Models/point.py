@@ -13,7 +13,7 @@ class Point(ToStrMixin):
         return math.sqrt((point.x_coordinate - self.x_coordinate)**2 + (point.y_coordinate - self.y_coordinate)**2)
 
 
-class Client(Point, ToStrMixin):
+class Client(Point):
     def __init__(self, x_coordinate: float, y_coordinate: float, demand: Demand):
         super().__init__(x_coordinate, y_coordinate)
         self.demand = demand
@@ -28,6 +28,6 @@ class Client(Point, ToStrMixin):
         return not self.is_done
 
 
-class Magazine(Point, ToStrMixin):
+class Magazine(Point):
     def __init__(self, x_coordinate: float, y_coordinate: float):
         super().__init__(x_coordinate, y_coordinate)

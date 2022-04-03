@@ -1,7 +1,9 @@
 import random
 
+from Models.utils import ToStrMixin
 
-class Demand:
+
+class Demand(ToStrMixin):
     def __init__(self, uranium: int, tuna: int, orange: int):
         self.uranium = uranium
         self.tuna = tuna
@@ -38,9 +40,6 @@ class Demand:
     def can_satisfy(self, other: 'Demand', max_total: int = 0) -> bool:
         new = (self - other)
         return new.is_balance_positive and new.total <= max_total if max_total != 0 else True
-
-    def __str__(self):
-        return "{},{},{}".format(self.uranium, self.tuna, self.orange)
 
     def __add__(self, other: 'Demand'):
         return Demand(uranium=self.uranium + other.uranium,
