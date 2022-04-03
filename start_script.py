@@ -1,4 +1,6 @@
 import os
+import random
+
 from dotenv import load_dotenv
 
 from Models.vehicle import Vehicle
@@ -9,6 +11,9 @@ from visualizer.map_visualizer import draw_point_map
 
 if __name__ == '__main__':
     load_dotenv()
+    if os.environ.get('RANDOM_DATA', 'False') == 'True':
+        random.seed(1)
+
     points = generate_starting_conditions(number_of_points=int(os.environ['NUMBER_OF_POINTS']),
                                           number_of_magazines=int(os.environ['NUMBER_OF_MAGAZINES']))
 
