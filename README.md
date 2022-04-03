@@ -1,4 +1,4 @@
-# inteligencja_obliczeniowaa
+# inteligencja_obliczeniowa
 
 # To co Gościu powiedział na ćwiczeniach:
 JAKIE MAJĄ BYĆ ŚREDNIE PROPORCJE LOSOWANEJ ROZNORODNOSCI I ILOSCI TOWAROW? -- rozkład jednostajny do wszystkiego<br/>
@@ -18,3 +18,9 @@ metodę do ewaluacji (losowa metoda do generacji trasy i porównanie z naszym al
 
 VRTP- obczaj<br/>
 VRPTW- obczaj<br/>
+
+# 3.04.2022
+Do optymalizacji:
+- ilośc pobieranego towaru z magazynu (na podstawie przyszłego punktu lub na podstawie całego klastru lub mapy)
+- klastry (obracanie lub dorzucanie punktów do złego klastra żeby go wyzerować lub wywalać problamtyczne punkty z klastrów lub TAK PRZESUWAĆ PUNKTY MIĘDZY KLASTRAMI, ŻEBY ZOSTAŁ OSTATNI PROBLEMATYCZNY KLASTER Z NAJWIĘKSZYM ZAGĘSZCZENIEM MAGAZYNÓW)
+- moduł statystyczny, testowy!!!
