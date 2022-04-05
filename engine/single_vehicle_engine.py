@@ -62,8 +62,6 @@ class SingleVehicleEngine(EngineInterface):
         for point in self.clients:
             dem_sum += point.demand
 
-        print(f'demand: {dem_sum}')
-
         for i in range(1, len(active_vehicles)):
             if active_vehicles[i].capacity > best_vehicle.capacity:
                 best_vehicle = active_vehicles[i]
