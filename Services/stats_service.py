@@ -45,7 +45,7 @@ class StatDataRow:
         self.total_uran_minus = total_uran_minus
 
 
-def CreateStatDataframe(points: list[Type[Point]]) -> pd.DataFrame:
+def CreateStatRows(points: list[Type[Point]]) -> pd.DataFrame:
     vehicles: Vehicle = list(filter(lambda point: isinstance(point, Vehicle), points))
 
     stat_dataframe_rows = []
@@ -85,6 +85,7 @@ def CreateStatDataframe(points: list[Type[Point]]) -> pd.DataFrame:
                 avg_mag_dist.append(vehicle.directions[i].calculate_distance(vehicle.directions[i + 1]))
                 avg_mag_dist.append(vehicle.directions[i].calculate_distance(vehicle.directions[i - 1]))
         total_dist = sum(point_distances)
+        efficiency = 0
         if total_dist > 0:
             efficiency = (total_tuna_plus + (-1) * total_tuna_minus + total_orange_plus + (-1) * total_orange_minus
                           + total_uran_plus + (-1) * total_uran_minus) / total_dist
@@ -106,8 +107,19 @@ def CreateStatDataframe(points: list[Type[Point]]) -> pd.DataFrame:
                                                total_orange_minus,
                                                total_uran_plus,
                                                total_uran_minus))
+    return stat_dataframe_rows
+
+def CreateStatDataframe(points: list[Type[Point]]):
+    stat_dataframe_rows = CreateStatRows(points)
     pd.options.display.width = 0
     df = pd.DataFrame([o.__dict__ for o in stat_dataframe_rows])
     df.loc["Total"] = df.sum()
     df.loc["Avg"] = df.loc["Total"] / (df.shape[0] - 1)
     return df
+
+def BuildTestDataframe(stat_dataframe_rows: list[Type[StatDataRow]]):
+    pd.options.display.width = 0
+    df = pd.DataFrame([o.__dict__ for o in stat_dataframe_rows])
+    df.loc["Total"] = df.sum()
+    df.loc["Avg"] = df.loc["Total"] / (df.shape[0] - 1)
+    return df.loc['Avg']

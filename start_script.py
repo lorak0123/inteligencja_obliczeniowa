@@ -9,6 +9,7 @@ from Services.stats_service import CreateStatDataframe
 from engine.multiple_vehicles_engine import MultipleVehiclesEngine
 from engine.single_vehicle_engine import SingleVehicleEngine
 from visualizer.map_visualizer import draw_point_map
+from Services.test_service import RunTests
 
 
 if __name__ == '__main__':
@@ -20,9 +21,10 @@ if __name__ == '__main__':
                                           number_of_magazines=int(os.environ['NUMBER_OF_MAGAZINES']))
 
     # engine = SingleVehicleEngine(points)
-    engine = MultipleVehiclesEngine(points)
-    computed = engine.compute()
-    statDataframe = CreateStatDataframe(computed)
+    # engine = MultipleVehiclesEngine(points)
+    # computed = engine.compute()
+    # statDataframe = CreateStatDataframe(computed)
+    # print(statDataframe)
 
-    draw_point_map(computed)
-    print(statDataframe)
+    # draw_point_map(computed)
+    RunTests(multiVehicle=True, test_num=1000)
