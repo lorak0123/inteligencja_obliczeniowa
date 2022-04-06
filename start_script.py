@@ -19,8 +19,8 @@ if __name__ == '__main__':
     points = generate_starting_conditions(number_of_points=int(os.environ['NUMBER_OF_POINTS']),
                                           number_of_magazines=int(os.environ['NUMBER_OF_MAGAZINES']))
 
-    engine = SingleVehicleEngine(points)
-    # engine = MultipleVehiclesEngine(points)
+    # engine = SingleVehicleEngine(points)
+    engine = MultipleVehiclesEngine(points)
     computed = engine.compute()
     statDataframe = CreateStatDataframe(computed)
 
