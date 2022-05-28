@@ -17,6 +17,7 @@ class Client(Point):
     def __init__(self, x_coordinate: float, y_coordinate: float, demand: Demand):
         super().__init__(x_coordinate, y_coordinate)
         self.demand = demand
+        self.start_demand = demand
 
     @property
     def is_done(self) -> bool:
