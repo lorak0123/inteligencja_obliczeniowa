@@ -19,12 +19,19 @@ if __name__ == '__main__':
 
     points = generate_starting_conditions(number_of_points=int(os.environ['NUMBER_OF_POINTS']),
                                           number_of_magazines=int(os.environ['NUMBER_OF_MAGAZINES']))
+    multiVehicle = False
+    # multiVehicle = False
+    engine = None
 
-    # engine = SingleVehicleEngine(points)
-    # engine = MultipleVehiclesEngine(points)
+    # if multiVehicle:
+    #     engine = MultipleVehiclesEngine(points)
+    # else:
+    #     engine = SingleVehicleEngine(points)
     # computed = engine.compute()
-    # statDataframe = CreateStatDataframe(computed)
+    # statDataframe = CreateStatDataframe(computed, multiVehicle, False)
     # print(statDataframe)
-
     # draw_point_map(computed)
-    RunTests(multiVehicle=True, test_num=1000)
+
+    RunTests(multiVehicle=multiVehicle, test_num=10000)
+
+

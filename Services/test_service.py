@@ -32,7 +32,7 @@ def RunTests(multiVehicle: bool, test_num: int):
 
         engine = MultipleVehiclesEngine(points) if multiVehicle else SingleVehicleEngine(points)
         computed = engine.compute()
-        stat_data_rows.extend(CreateStatRows(computed))
+        stat_data_rows.extend(CreateStatRows(computed, multiVehicle, True))
         progress_bar(i, test_num)
     test_data = BuildTestDataframe(stat_data_rows)
     print('\n')

@@ -10,7 +10,7 @@ from visualizer.map_visualizer import draw_point_map
 
 
 def generate_vehicles(magazines: list[Magazine]):
-    number_of_vehicles = random.randint(3, 7)
+    number_of_vehicles = random.randint(3, 6)
     vehicles = []
     for i in range(number_of_vehicles):
         demand = Demand(0, 0, 0)

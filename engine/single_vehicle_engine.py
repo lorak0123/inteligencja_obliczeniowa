@@ -1,4 +1,6 @@
+import math
 import os
+import numpy as np
 from typing import Type
 
 from Models.demand import Demand
@@ -21,10 +23,12 @@ class SingleVehicleEngine(EngineInterface):
                 nearest_distance = distance
 
         vehicle.move(nearest_point)
-        max_demand = max([vehicle.capacity/6, int(os.environ['MAX_DEMAND'])])
+        max_demand = max([vehicle.capacity/5, int(os.environ['MAX_DEMAND'])])
         vehicle.demand = Demand(uranium=max_demand,
                                 tuna=max_demand,
                                 orange=max_demand)
+        if vehicle.capacity >= 1500:
+            self.global_demand_correction(vehicle)
 
     def go_to_next_client(self, vehicle: Vehicle):
         not_done = list(filter(lambda client: client.not_done, self.clients))
@@ -35,8 +39,11 @@ class SingleVehicleEngine(EngineInterface):
         actual = Point(vehicle.x_coordinate, vehicle.y_coordinate)
         nearest_point = None
         nearest_distance = None
-
         for i in range(len(not_done)):
+            if (vehicle.demand.tuna + vehicle.demand.uranium + vehicle.demand.orange) > vehicle.capacity:
+                print("wyjebało poza skale")
+            if vehicle.demand.tuna < 0 or vehicle.demand.uranium < 0 or vehicle.demand.orange< 0:
+                print("mniej niz zero")
             if vehicle.demand.can_satisfy(other=not_done[i].demand, max_total=vehicle.capacity):
                 if nearest_point is None:
                     nearest_point = not_done[i]
@@ -53,6 +60,21 @@ class SingleVehicleEngine(EngineInterface):
             nearest_point.demand = Demand(0, 0, 0)
         else:
             self.go_to_next_magazine(vehicle)
+
+    def global_demand_correction(self, vehicle: Vehicle) -> list:
+        not_done = list(filter(lambda client: client.not_done, self.clients))
+        global_demand = Demand(uranium=0,
+                                tuna=0,
+                                orange=0)
+        for i in not_done:
+            global_demand += i.demand
+        # print('----')
+        # print(global_demand)
+        vehicle.demand.tuna += global_demand.tuna*(-1) if math.fabs(global_demand.tuna*(-1)) < vehicle.capacity/20 else np.sign(global_demand.tuna)*vehicle.capacity/20
+        vehicle.demand.uranium += global_demand.uranium*(-1) if math.fabs(global_demand.uranium*(-1)) < vehicle.capacity/20 else np.sign(global_demand.uranium)*vehicle.capacity/20
+        vehicle.demand.orange += global_demand.orange*(-1) if math.fabs(global_demand.orange*(-1)) < vehicle.capacity/20 else np.sign(global_demand.orange)*vehicle.capacity/20
+        # print(vehicle.demand)
+
 
     def compute(self) -> list[Type[Point]]:
         active_vehicles: list[Vehicle] = list(filter(lambda vehicle: not vehicle.is_cat_driver, self.vehicles))
