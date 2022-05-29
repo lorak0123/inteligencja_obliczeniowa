@@ -12,8 +12,8 @@ class StatDataRow:
                  points: int,
                  mag_returns: int,
                  avg_mag_dist: float,  # z punktu do magazynu i z magazynu do punktu
-                 avg_point_dist: float,
-                 std_point_dist: float):
+                 avg_point_dist: float):
+                 # std_point_dist: float,
                  # avg_v_efficiency: float,  # wartosc bezwzgledna z towaru /dystans
                  # total_cargo: int,
                  # total_tuna: int,
@@ -31,7 +31,7 @@ class StatDataRow:
         self.mag_returns = mag_returns
         self.avg_mag_dist = avg_mag_dist
         self.avg_point_dist = avg_point_dist
-        self.std_point_dist = std_point_dist
+        # self.std_point_dist = std_point_dist
         # self.avg_v_efficiency = avg_v_efficiency
         # self.total_cargo = total_cargo
         # self.total_tuna = total_tuna
@@ -94,8 +94,8 @@ def CreateStatRows(points: list[Type[Point]], multiVehicle: bool, isTest: bool) 
                                                points_num,
                                                mag_returns,
                                                np.mean(avg_mag_dist) if len(avg_mag_dist) > 0 else 0,
-                                               np.mean(point_distances) if len(point_distances) > 0 else 0,
-                                               np.std(point_distances) if len(point_distances) > 0 else 0))
+                                               np.mean(point_distances) if len(point_distances) > 0 else 0))
+                                               # np.std(point_distances) if len(point_distances) > 0 else 0,
                                                # efficiency,
                                                # total_cargo,
                                                # total_tuna,
@@ -118,8 +118,8 @@ def CreateSummaryDataframeRow(stat_dataframe_rows: list[Type[StatDataRow]]):
                         sum([s.points for s in stat_dataframe_rows]),
                         sum([s.mag_returns for s in stat_dataframe_rows]),
                         np.mean([s.avg_mag_dist for s in stat_dataframe_rows]),
-                        np.mean([s.avg_point_dist for s in stat_dataframe_rows]),
-                        np.mean([s.std_point_dist for s in stat_dataframe_rows]))]
+                        np.mean([s.avg_point_dist for s in stat_dataframe_rows]))]
+                        # np.mean([s.std_point_dist for s in stat_dataframe_rows]),
                         # np.mean([s.avg_v_efficiency for s in stat_dataframe_rows]),
                         # sum([s.total_cargo for s in stat_dataframe_rows]),
                         # sum([s.total_tuna for s in stat_dataframe_rows]),

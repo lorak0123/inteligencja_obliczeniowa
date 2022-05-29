@@ -2,7 +2,7 @@ import math
 import os
 import numpy as np
 from typing import Type
-
+from copy import deepcopy
 from Models.demand import Demand
 from Models.exceptions import NoMoreClientsException
 from Models.point import Point
@@ -29,21 +29,70 @@ class SingleVehicleEngine(EngineInterface):
                                 orange=max_demand)
         if vehicle.capacity >= 1500:
             self.global_demand_correction(vehicle)
+        return nearest_distance, nearest_point
 
     def go_to_next_client(self, vehicle: Vehicle):
         not_done = list(filter(lambda client: client.not_done, self.clients))
-
         if len(not_done) == 0:
             raise NoMoreClientsException('No more clients')
 
         actual = Point(vehicle.x_coordinate, vehicle.y_coordinate)
         nearest_point = None
+        nearest_2nd_point = None
         nearest_distance = None
         for i in range(len(not_done)):
-            if (vehicle.demand.tuna + vehicle.demand.uranium + vehicle.demand.orange) > vehicle.capacity:
-                print("wyjebało poza skale")
-            if vehicle.demand.tuna < 0 or vehicle.demand.uranium < 0 or vehicle.demand.orange< 0:
-                print("mniej niz zero")
+            if vehicle.demand.can_satisfy(other=not_done[i].demand, max_total=vehicle.capacity):
+                if nearest_point is None:
+                    nearest_point = not_done[i]
+                    nearest_distance = actual.calculate_distance(not_done[i])
+                else:
+                    distance = actual.calculate_distance(not_done[i])
+                    if distance < nearest_distance:
+                        nearest_2nd_point = nearest_point
+                        nearest_point = not_done[i]
+                        nearest_distance = distance
+
+        if nearest_point is not None:
+            if bool(os.environ['FORTUNE_TELLER']) and nearest_2nd_point is not None and len(not_done) > 3:
+                dict ={}
+                dict[nearest_point ] = self.see_the_future(deepcopy(vehicle), deepcopy(self.clients), deepcopy(nearest_point))
+                dict[nearest_2nd_point] = self.see_the_future(deepcopy(vehicle), deepcopy(self.clients), deepcopy(nearest_2nd_point))
+                dict = {k: v for k, v in sorted(dict.items(), key=lambda item: item[1])}
+                nearest_point = list(dict.keys())[0]
+            vehicle.move(nearest_point)
+            vehicle.demand -= nearest_point.demand
+            nearest_point.demand = Demand(0, 0, 0)
+        else:
+            self.go_to_next_magazine(vehicle)
+
+    def global_demand_correction(self, vehicle: Vehicle) -> list:
+        not_done = list(filter(lambda client: client.not_done, self.clients))
+        global_demand = Demand(uranium=0,
+                                tuna=0,
+                                orange=0)
+        for i in not_done:
+            global_demand += i.demand
+        vehicle.demand.tuna += global_demand.tuna*(-1) if math.fabs(global_demand.tuna*(-1)) < vehicle.capacity/20 else np.sign(global_demand.tuna)*vehicle.capacity/20
+        vehicle.demand.uranium += global_demand.uranium*(-1) if math.fabs(global_demand.uranium*(-1)) < vehicle.capacity/20 else np.sign(global_demand.uranium)*vehicle.capacity/20
+        vehicle.demand.orange += global_demand.orange*(-1) if math.fabs(global_demand.orange*(-1)) < vehicle.capacity/20 else np.sign(global_demand.orange)*vehicle.capacity/20
+
+    def see_the_future(self,  vehicle: Vehicle, points: list[Type[Point]], current_point: Point) -> bool:
+        total_distance: int = 0
+        not_done = list(filter(lambda client: client.not_done, points))
+        for i in range(len(not_done)-3):
+            dodanie, next_point=self.trip_forecast(vehicle, points, current_point)
+            current_point = next_point
+            total_distance += dodanie
+        return total_distance
+
+    def trip_forecast(self, vehicle: Vehicle, not_done: list[Type[Point]], actual: Point):
+        not_done = list(filter(lambda client: client.not_done, not_done))
+
+        if len(not_done) == 0:
+            raise NoMoreClientsException('No more clients')
+        nearest_point = None
+        nearest_distance = None
+        for i in range(len(not_done)):
             if vehicle.demand.can_satisfy(other=not_done[i].demand, max_total=vehicle.capacity):
                 if nearest_point is None:
                     nearest_point = not_done[i]
@@ -58,22 +107,10 @@ class SingleVehicleEngine(EngineInterface):
             vehicle.move(nearest_point)
             vehicle.demand -= nearest_point.demand
             nearest_point.demand = Demand(0, 0, 0)
+            return nearest_distance, nearest_point
         else:
-            self.go_to_next_magazine(vehicle)
-
-    def global_demand_correction(self, vehicle: Vehicle) -> list:
-        not_done = list(filter(lambda client: client.not_done, self.clients))
-        global_demand = Demand(uranium=0,
-                                tuna=0,
-                                orange=0)
-        for i in not_done:
-            global_demand += i.demand
-        # print('----')
-        # print(global_demand)
-        vehicle.demand.tuna += global_demand.tuna*(-1) if math.fabs(global_demand.tuna*(-1)) < vehicle.capacity/20 else np.sign(global_demand.tuna)*vehicle.capacity/20
-        vehicle.demand.uranium += global_demand.uranium*(-1) if math.fabs(global_demand.uranium*(-1)) < vehicle.capacity/20 else np.sign(global_demand.uranium)*vehicle.capacity/20
-        vehicle.demand.orange += global_demand.orange*(-1) if math.fabs(global_demand.orange*(-1)) < vehicle.capacity/20 else np.sign(global_demand.orange)*vehicle.capacity/20
-        # print(vehicle.demand)
+            nearest_distance, nearest_point = self.go_to_next_magazine(vehicle)
+            return nearest_distance, nearest_point
 
 
     def compute(self) -> list[Type[Point]]:
