@@ -1,3 +1,4 @@
+import inspect
 import os
 import random
 
@@ -26,6 +27,6 @@ if __name__ == '__main__':
     print(statDataframe)
     draw_point_map(computed)
 
-    # RunTests(multiVehicle=multiVehicle, test_num=100)
+    RunTests(Engine, multiVehicle=multiVehicle, test_num=100)
 
 

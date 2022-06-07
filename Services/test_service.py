@@ -22,7 +22,7 @@ def progress_bar(count, total, status='', bar_len=60):
     sys.stdout.flush()
 
 
-def RunTests(multiVehicle: bool, test_num: int):
+def RunTests(engine_class, multiVehicle: bool, test_num: int):
     if os.environ.get('RANDOM_DATA', 'True') == 'False':
         random.seed(1)
     stat_data_rows = []
@@ -30,7 +30,7 @@ def RunTests(multiVehicle: bool, test_num: int):
         points = generate_starting_conditions(number_of_points=int(os.environ['NUMBER_OF_POINTS']),
                                               number_of_magazines=int(os.environ['NUMBER_OF_MAGAZINES']))
 
-        engine = MultipleVehiclesEngine(points) if multiVehicle else SingleVehicleEngine(points)
+        engine = engine_class(points)
         computed = engine.compute()
         stat_data_rows.extend(CreateStatRows(computed, multiVehicle, True))
         progress_bar(i, test_num)
