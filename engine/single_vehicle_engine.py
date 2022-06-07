@@ -53,7 +53,7 @@ class SingleVehicleEngine(EngineInterface):
                         nearest_distance = distance
 
         if nearest_point is not None:
-            if bool(os.environ['FORTUNE_TELLER']) and nearest_2nd_point is not None and len(not_done) > 3:
+            if os.environ['FORTUNE_TELLER'] == 'True' and nearest_2nd_point is not None and len(not_done) > 3:
                 dict ={}
                 dict[nearest_point ] = self.see_the_future(deepcopy(vehicle), deepcopy(self.clients), deepcopy(nearest_point))
                 dict[nearest_2nd_point] = self.see_the_future(deepcopy(vehicle), deepcopy(self.clients), deepcopy(nearest_2nd_point))
@@ -111,7 +111,6 @@ class SingleVehicleEngine(EngineInterface):
         else:
             nearest_distance, nearest_point = self.go_to_next_magazine(vehicle)
             return nearest_distance, nearest_point
-
 
     def compute(self) -> list[Type[Point]]:
         active_vehicles: list[Vehicle] = list(filter(lambda vehicle: not vehicle.is_cat_driver, self.vehicles))

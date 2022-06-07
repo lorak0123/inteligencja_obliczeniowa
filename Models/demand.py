@@ -1,3 +1,4 @@
+import math
 import random
 
 from Models.utils import ToStrMixin
@@ -50,3 +51,10 @@ class Demand(ToStrMixin):
         return Demand(uranium=self.uranium - other.uranium,
                       tuna=self.tuna - other.tuna,
                       orange=self.orange - other.orange)
+
+    def __lt__(self, other):
+        self_sum = math.fabs(self.uranium) + math.fabs(self.tuna) + math.fabs(self.orange)
+        other_sum = math.fabs(other.uranium) + math.fabs(other.tuna) + math.fabs(other.orange)
+
+        return self_sum < other_sum
+
